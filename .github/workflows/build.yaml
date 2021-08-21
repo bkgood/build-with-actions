@@ -9,5 +9,4 @@ jobs:
         - name: pull
           uses: actions/checkout@v2
         - name: make
-          working-directory: $GITHUB_WORKSPACE
-          run: make
+          run: make -C $GITHUB_WORKSPACE
