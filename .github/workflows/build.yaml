@@ -1,0 +1,13 @@
+---
+name: build
+on: [ push ]
+jobs:
+  make:
+    name: run make
+    runs-on: ubuntu-latest
+    steps:
+        - name: pull
+          uses: actions/checkout@v2
+        - name: make
+          working-directory: $GITHUB_WORKSPACE
+          run: make
