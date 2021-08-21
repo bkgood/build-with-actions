@@ -11,4 +11,4 @@ jobs:
         - name: make
           run: make -C $GITHUB_WORKSPACE
         - name: run
-          run: ./$GITHUB_WORKSPACE/hello
+          run: $GITHUB_WORKSPACE/hello
