@@ -9,10 +9,17 @@ jobs:
         - name: pull
           uses: actions/checkout@v2
         - name: make
-          working-directory: ${{ env.GITHUB_WORKSPACE }}
           run: make
         - name: run
-          run: $GITHUB_WORKSPACE/hello
+          run: ./hello
+        - name: build container
+          run: |
+              c=$(buildah from gcr.io/distroless/static-debian10)
+              buildah add --chmod 555 $c hello /bin/
+              buildah config --author 'William Good' --cmd /bin/hello $c
+              buildah commit $c hello
+        - name: run container
+          run: podman run --rm hello
   make-container-gcc:
     name: make container (gcc)
     runs-on: ubuntu-latest
@@ -20,7 +27,6 @@ jobs:
         - name: pull
           uses: actions/checkout@v2
         - name: build
-          working-directory: ${{ env.GITHUB_WORKSPACE }}
           run: ./build.sh
         - name: run
           run: podman run hello
@@ -31,7 +37,6 @@ jobs:
         - name: pull
           uses: actions/checkout@v2
         - name: build
-          working-directory: ${{ env.GITHUB_WORKSPACE }}
           run: ./build-ubuntu.sh
         - name: run
           run: podman run hello
