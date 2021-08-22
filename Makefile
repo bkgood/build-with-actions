@@ -1,2 +1,2 @@
 hello: hello.c
-	cc -o hello hello.c
+	cc -static -o hello hello.c

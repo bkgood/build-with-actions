@@ -2,8 +2,8 @@
 name: build
 on: [ push ]
 jobs:
-  make:
-    name: run make
+  make-native:
+    name: make native
     runs-on: ubuntu-latest
     steps:
         - name: pull
@@ -13,3 +13,14 @@ jobs:
           run: make
         - name: run
           run: $GITHUB_WORKSPACE/hello
+  make-container:
+    name: make container
+    runs-on: ubuntu-latest
+    steps:
+        - name: pull
+          uses: actions/checkout@v2
+        - name: build
+          working-directory: ${{ env.GITHUB_WORKSPACE }}
+          run: ./build.sh
+        - name: run
+          run: podman run hello
