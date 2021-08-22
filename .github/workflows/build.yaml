@@ -12,6 +12,14 @@ jobs:
           run: make
         - name: run
           run: ./hello
+        - name: registry login
+          uses: redhat-actions/podman-login@v1
+          with:
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+              registry: ghcr.io
+        - name: sync deps
+          run: skopeo sync --src docker --dest docker --scoped gcr.io/distroless/static-debian11:latest ghcr.io/${{ github.actor }}
         - name: build container
           run: |
               c=$(buildah from gcr.io/distroless/static-debian10)
@@ -20,6 +28,16 @@ jobs:
               buildah commit $c hello
         - name: run container
           run: podman run --rm hello
+        - name: push to registry
+          id: push-to-registry
+          uses: redhat-actions/push-to-registry@v2
+          with:
+              image: hello
+              tags: latest
+              registry: ghcr.io/${{ github.actor }}
+        - name: show push results
+          run: echo "image pushed to ${{ steps.push-to-registry.outputs.registry-paths }}"[
+
   make-container-gcc:
     name: make container (gcc)
     runs-on: ubuntu-latest
